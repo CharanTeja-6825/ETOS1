@@ -1,0 +1,89 @@
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Homepage</title>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <style>
+        .hero-section {
+        background-image: url("{% static 'images/hero-background.jpg' %}"); /* Path to your image */
+        background-size: cover;
+        background-position: center;
+        color: white;
+        padding: 60px 0;
+        text-align: center;
+        position: relative;
+        z-index: 1;
+    }
+
+    .hero-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay */
+        z-index: -1;
+    }
+
+    .hero-section h1 {
+        font-size: 3rem;
+    }
+    </style>
+</head>
+<body>
+{% include 'employee/employee_navbar.html' %}
+<center>
+  <h1>Employee Homepage</h1>
+</center>
+{% block content %}
+  <!-- Hero Section with Background Image -->
+  <section class="hero-section">
+    <div class="container">
+      {% if user.is_authenticated %}
+        <h1>Welcome, {{ user.first_name }}!</h1>
+      {% else %}
+        <h1>Welcome, Employee!</h1>
+      {% endif %}
+      <p>Access your assigned courses, track your progress, and view your certificates here.</p>
+    </div>
+  </section>
+
+  <!-- Employee Specific Content -->
+  <section class="container mt-4">
+    <div class="row">
+      <div class="col-md-4">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Assigned Courses</h5>
+            <p class="card-text">View the courses that have been assigned to you.</p>
+            <a href="#" class="btn btn-primary">View Courses</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Progress</h5>
+            <p class="card-text">Track your progress and see how you're doing.</p>
+            <a href="#" class="btn btn-primary">Track Progress</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Certificates</h5>
+            <p class="card-text">View your certificates upon completion of courses.</p>
+            <a href="#" class="btn btn-primary">View Certificates</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}
+</body>
+</html>
