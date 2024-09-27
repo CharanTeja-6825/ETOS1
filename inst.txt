@@ -1,4 +1,0 @@
-<<<<<<< HEAD
-=======
-Hello teja hello
->>>>>>> c65ff0ac42a937de7ef1be44ec02cb9b55ba73d1
