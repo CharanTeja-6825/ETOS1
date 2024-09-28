@@ -4,11 +4,8 @@ from django.db.models.functions import Length
 from django.urls import reverse
 from django.contrib.auth.models import User
 from django.contrib import messages
-from .forms import ProfileForm, UpdatePasswordForm
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Course, Module
-from .forms import CourseForm, ModuleForm
 
 
 
