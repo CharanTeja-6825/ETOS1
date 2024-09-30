@@ -9,13 +9,12 @@
     <style>
         /* Background image applied to the entire body */
         body {
-            background-image: url("{% static 'images/about_us_1.png' %}");
+            background-image: url("{% static 'images/about_us._1.png' %}");
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
             color: white;
         }
-
         /* Hero section overlay to darken background for text readability */
         .hero-section {
             position: relative;
@@ -56,6 +55,34 @@
             position: relative;
             z-index: 1;
         }
+        .card-deck .card {
+            margin-bottom: 20px;
+        }
+        .services-section {
+            background-color: #f8f9fa;
+            padding: 60px 0;
+            margin-bottom: 40px; /* Add gap between sections */
+        }
+        .about-section {
+            padding: 60px 0;
+            background-color: #343a40;
+            color: white;
+            margin-bottom: 40px; /* Add gap between sections */
+        }
+        .about-section h2, .contact-section h2 {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .about-images {
+            margin-top: 30px;
+        }
+        .footer {
+            background-color: black;
+            color: white;
+            padding: 10px 0;  /* Decreased footer height */
+            width: 100%;  /* Full screen width */
+            text-align: center;
+        }
         .chatbot {
             position: fixed;
             bottom: 30px;
@@ -66,6 +93,9 @@
             padding: 15px;
             cursor: pointer;
         }
+        #about-us {
+    margin-top: 200px; /* Increase this value to add more space */
+}
     </style>
 </head>
 <body>
@@ -120,6 +150,48 @@
                 </div>
             </div>
         </div>
+
+        <!-- About Us Section with more pictures and info -->
+  <section class="about-section " id="about-us">
+    <div class="container">
+      <h2>About Us</h2>
+      <div class="row">
+        <div class="col-md-6">
+          <p>We are committed to revolutionizing the training management industry. Our platform allows businesses to streamline their training processes efficiently, with features that facilitate content creation, assignment, and tracking of learning progress. With an emphasis on providing seamless experiences for administrators, trainers, and learners, we aim to foster continuous professional development.</p>
+        </div>
+        <div class="col-md-6">
+          <img src="{% static 'images/about_us_1.png' %}" class="img-fluid" alt="Our Team" width="500" height="300">
+        </div>
+      </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact and Support Section -->
+  <section class="contact-section">
+    <div class="container">
+      <h2>Contact & Support</h2>
+      <div class="row">
+        <div class="col-md-6">
+          <h5>Customer Support</h5>
+          <p>If you have any questions or need help, feel free to reach out to our support team.</p>
+          <ul>
+            <li>Email: support@adminhomepage.com</li>
+            <li>Phone: +1 (800) 123-4567</li>
+          </ul>
+        </div>
+        <div class="col-md-6">
+          <h5>Live Chat</h5>
+          <p>Need immediate assistance? Click on the chatbot icon below to start a live chat with our support team.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer Section -->
+  <footer class="footer">
+    <p>&copy; 2024 Admin Homepage. All rights reserved.</p>
+  </footer>
          <!-- Chatbot -->
   <div class="chatbot">
     <span>💬 Chat with us!</span>
