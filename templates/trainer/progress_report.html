@@ -87,10 +87,9 @@
                 <td>{{ report.status }}</td>
                 <td>{{ report.remarks }}</td>
                 <td>
-                    <!-- Add a form for updating progress if needed -->
                     <form method="POST">
                         {% csrf_token %}
-                        {{ form.as_p }}
+                        <input type="hidden" name="report_id" value="{{ report.id }}">
                         <button type="submit">Update Progress</button>
                     </form>
                 </td>
