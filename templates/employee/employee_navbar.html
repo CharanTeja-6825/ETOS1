@@ -1,4 +1,4 @@
-<!DOCTYPE>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -34,11 +34,10 @@
           <li class="nav-item">
             <a class="nav-link" href="#">View Reports</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'employee:profile_page' %}">Profile</a>
-          </li>
         </ul>
-        <div class="d-flex">
+        <div class="d-flex align-items-center">
+          <!-- Profile Link -->
+          <a class="nav-link text-white me-3" href="{% url 'employee:profile_page' %}">Profile</a>
           {% if user.is_authenticated %}
             <a class="btn btn-danger btn-custom" href="{% url 'admin_app:log_out' %}">Logout</a>
           {% else %}
