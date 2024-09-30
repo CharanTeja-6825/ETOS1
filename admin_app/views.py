@@ -4,10 +4,13 @@ from django.db.models.functions import Length
 from django.urls import reverse
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, get_object_or_404, redirect
-from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from .models import Course
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.models import User
+from .models import Course  # Assuming Course is your model for courses
+from django.http import HttpResponseRedirect
+from django.views.decorators.csrf import csrf_exempt
 from .forms import UpdatePasswordForm, CourseForm
 
 
@@ -93,13 +96,13 @@ def log_out(request):
 @login_required
 def update_profile(request):
     if request.method == 'POST':
-        form = ProfileForm(request.POST, instance=request.user)
+        form = UpdatePasswordForm(request.POST, instance=request.user)
         if form.is_valid():
             form.save()
             messages.success(request, 'Your profile was successfully updated!')
             return redirect('profile_page')
     else:
-        form = ProfileForm(instance=request.user)
+        form = UpdatePasswordForm(instance=request.user)
         messages.error(request, 'An error occurred While performing the Action')
 
     return render(request, 'admin_app/profile.html', {'form': form})
@@ -132,15 +135,36 @@ def Course_Manage(request):
     return render(request, 'courses/CourseManagement.html')
 
 def create_course_view(request):
-    trainers = User.objects.filter(username__length=4)  # Filter trainers with username length 4
+    # Fetch only trainers whose username length is 4
+    trainers = User.objects.annotate(username_length=Length('username')).filter(username_length=4)
+
     if request.method == 'POST':
-        form = CourseForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('course_list')
-    else:
-        form = CourseForm()
-    return render(request, 'courses/create_course.html', {'trainers': trainers, 'form': form})
+        # Handle form submission
+        course_name = request.POST.get('name')
+        course_description = request.POST.get('description')
+        course_duration = request.POST.get('duration')
+        assigned_trainer_id = request.POST.get('trainer')
+        status = 'Active' if 'status' in request.POST else 'Inactive'
+
+        # Fetch the selected trainer object
+        assigned_trainer = get_object_or_404(User, id=assigned_trainer_id)
+
+        # Create and save the course
+        new_course = Course(
+            name=course_name,
+            description=course_description,
+            duration=course_duration,
+            trainer=assigned_trainer,
+            status=status
+        )
+        new_course.save()
+
+        return redirect('admin_app:course-list')  # Redirect to the course listing page
+
+    return render(request, 'admin_app/course_form.html', {
+        'trainers': trainers,
+    })
+
 
 
 def delete_course_view(request, pk):  # Use 'pk' instead of 'course_id' for standard naming
@@ -153,11 +177,6 @@ def delete_course_view(request, pk):  # Use 'pk' instead of 'course_id' for stan
 
     return render(request, 'courses/course_delete.html', {'course': course})
 
-
-from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib import messages
-from .models import Course
-from django.contrib.auth.models import User  # Import User model
 
 
 def update_course_view(request, id):  # Use 'id' to match your URL pattern
