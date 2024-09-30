@@ -7,6 +7,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
 
+from .forms import UpdatePasswordForm, CourseForm
 
 
 def homepage(request):
@@ -125,8 +126,18 @@ def profile_page(request):
         'user': request.user,
     })
 
-# ListView for Courses
 
+def Course_Manage(request):
+    return render(request, 'courses/CourseManagement.html')
 
-
+def create_course_view(request):
+    trainers = User.objects.filter(username__length=4)  # Filter trainers with username length 4
+    if request.method == 'POST':
+        form = CourseForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('course_list')
+    else:
+        form = CourseForm()
+    return render(request, 'create_course.html', {'trainers': trainers, 'form': form})
 
