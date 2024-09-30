@@ -135,7 +135,7 @@ def profile_page(request):
 
 @login_required
 def Course_Manage(request):
-    return render(request, 'courses/CourseManagement.html')
+    return render(request, 'courses/base.html')
 
 @login_required
 def create_course_view(request):
@@ -146,7 +146,7 @@ def create_course_view(request):
             return redirect('homepage')
     else:
         form = CourseForm()
-    return render(request, 'CourseManagement.html', {'form': form})
+    return render(request, 'courses/course_create.html', {'form': form})
 
 
 @login_required
@@ -182,4 +182,9 @@ def update_course_view(request, id):  # Use 'id' to match your URL pattern
         return redirect('admin_app:course_list')  # Redirect to the course list page or another page
 
     # Render the update course template
-    return render(request, 'courses/course_update.html', {'course': course, 'trainers': trainers})
+    return render(request, 'courses/course_edit.html', {'course': course, 'trainers': trainers})
+
+
+def course_list(request):
+    courses = Course.objects.all()  # Get all courses
+    return render(request, 'courses/course_list.html', {'courses': courses})
