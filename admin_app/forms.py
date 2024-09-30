@@ -16,9 +16,11 @@ class UpdatePasswordForm(PasswordChangeForm):
 class CourseForm(forms.ModelForm):
     class Meta:
         model = Course
-        fields = ['name', 'description', 'duration', 'trainer', 'status']
+        fields = '__all__'
 
     def __init__(self, *args, **kwargs):
-        super(CourseForm, self).__init__(*args, **kwargs)
-        # Filter trainers with username length of 4
-        self.fields['trainer'].queryset = User.objects.filter(username__length=4)
+        super().__init__(*args, **kwargs)
+        # Filter trainers whose username length is exactly 4 characters
+        self.fields['trainer'].queryset = User.objects.filter(username__regex=r'^\w{4}$')
+        # Debugging output
+        print(self.fields['trainer'].queryset)  # This should print the filtered queryset
