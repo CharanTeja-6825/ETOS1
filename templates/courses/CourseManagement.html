@@ -46,7 +46,7 @@
                 {% for course in courses %}
                 <tr>
                     <td>{{ course.name }}</td>
-                    <td>{{ course.trainer.name }}</td>  <!-- Assuming `trainer` is a foreign key with a `name` field -->
+                    <td>{{ course.trainer.name }}</td>
                     <td>
                         <span class="badge bg-{{ course.status|lower }}">{{ course.status }}</span>
                     </td>
@@ -68,7 +68,7 @@
     <div class="modal fade" id="courseModal" tabindex="-1" aria-labelledby="courseModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <form id="courseForm" action="{% url 'admin_app:course-create' %}" method="post">  <!-- Updated URL -->
+                <form id="courseForm" method="post">  <!-- Form action dynamically updated via JS -->
                     {% csrf_token %}
                     <div class="modal-header">
                         <h5 class="modal-title" id="courseModalLabel">Create Course</h5>
@@ -95,7 +95,7 @@
                             <label for="assignedTrainer" class="form-label">Assigned Trainer</label>
                             <select class="form-select" id="assignedTrainer" name="trainer" required>
                                 {% for trainer in trainers %}
-                                <option value="{{ trainer.id }}">{{ trainer.name }}</option>
+                                <option value="{{ trainer.id }}">{{ trainer.username }}</option>
                                 {% endfor %}
                             </select>
                         </div>
@@ -155,20 +155,21 @@
         courseModal.addEventListener('show.bs.modal', function (event) {
             var button = event.relatedTarget;
             var courseId = button.getAttribute('data-id');
+            var courseForm = document.getElementById('courseForm');
 
             if (courseId) {
                 // Fetch course data via AJAX or set from server-side
                 // For demonstration, using placeholders
                 document.getElementById('courseModalLabel').textContent = 'Edit Course';
-                document.getElementById('courseForm').action = "{% url 'admin_app:course-update' course.id %}"; // Update action for editing
+                courseForm.action = "{% url 'admin_app:course-update' 0 %}".replace('0', courseId); // Update action for editing
                 document.getElementById('courseName').value = 'Sample Course';
                 document.getElementById('courseDescription').value = 'This is a sample course description.';
                 document.getElementById('courseDuration').value = '10';
                 // Set assigned trainer and status as needed
             } else {
                 document.getElementById('courseModalLabel').textContent = 'Create Course';
-                document.querySelector('form').reset();
-                document.getElementById('modulesContainer').innerHTML = '';
+                courseForm.action = "{% url 'admin_app:course-create' %}";  // Action for creating a new course
+                courseForm.reset();
             }
         });
     </script>

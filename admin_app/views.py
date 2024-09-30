@@ -140,7 +140,7 @@ def create_course_view(request):
             return redirect('course_list')
     else:
         form = CourseForm()
-    return render(request, 'create_course.html', {'trainers': trainers, 'form': form})
+    return render(request, 'courses/create_course.html', {'trainers': trainers, 'form': form})
 
 
 def delete_course_view(request, pk):  # Use 'pk' instead of 'course_id' for standard naming
@@ -151,16 +151,22 @@ def delete_course_view(request, pk):  # Use 'pk' instead of 'course_id' for stan
         messages.success(request, f'The course "{course.name}" was deleted successfully.')
         return redirect('course_list')  # Redirect to the course list view after deletion
 
-    return render(request, 'delete_course.html', {'course': course})
+    return render(request, 'courses/course_delete.html', {'course': course})
 
 
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib import messages
+from .models import Course
+from django.contrib.auth.models import User  # Import User model
 
-def update_course_view(request, pk):
-    course = get_object_or_404(Course, pk=pk)
-    trainers = User.objects.filter(username__length=4)  # Get trainers with username length of 4
+
+def update_course_view(request, id):  # Use 'id' to match your URL pattern
+    # Fetch the course object using the id
+    course = get_object_or_404(Course, id=id)
+    trainers = User.objects.filter(username__length=4)  # Filter trainers with username length 4
 
     if request.method == 'POST':
-        # Update the course with POST data
+        # Updating the course details from POST data
         course.name = request.POST.get('name')
         course.description = request.POST.get('description')
         course.duration = request.POST.get('duration')
@@ -169,7 +175,8 @@ def update_course_view(request, pk):
 
         # Save the updated course
         course.save()
-        messages.success(request, f'The course "{course.name}" has been updated successfully.')
-        return redirect('course_list')  # Redirect to the course list page after updating
+        messages.success(request, f'Course "{course.name}" was updated successfully.')
+        return redirect('admin_app:course_list')  # Redirect to the course list page or another page
 
-    return render(request, 'update_course.html', {'course': course, 'trainers': trainers})
+    # Render the update course template
+    return render(request, 'courses/course_update.html', {'course': course, 'trainers': trainers})
