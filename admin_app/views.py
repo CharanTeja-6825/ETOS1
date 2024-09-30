@@ -3,10 +3,11 @@ from django.contrib.auth import logout
 from django.db.models.functions import Length
 from django.urls import reverse
 from django.contrib.auth.models import User
-from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
-
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib import messages
+from .models import Course
 from .forms import UpdatePasswordForm, CourseForm
 
 
@@ -139,5 +140,43 @@ def create_course_view(request):
             return redirect('course_list')
     else:
         form = CourseForm()
-    return render(request, 'create_course.html', {'trainers': trainers, 'form': form})
+    return render(request, 'courses/create_course.html', {'trainers': trainers, 'form': form})
 
+
+def delete_course_view(request, pk):  # Use 'pk' instead of 'course_id' for standard naming
+    course = get_object_or_404(Course, pk=pk)
+
+    if request.method == 'POST':
+        course.delete()
+        messages.success(request, f'The course "{course.name}" was deleted successfully.')
+        return redirect('course_list')  # Redirect to the course list view after deletion
+
+    return render(request, 'courses/course_delete.html', {'course': course})
+
+
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib import messages
+from .models import Course
+from django.contrib.auth.models import User  # Import User model
+
+
+def update_course_view(request, id):  # Use 'id' to match your URL pattern
+    # Fetch the course object using the id
+    course = get_object_or_404(Course, id=id)
+    trainers = User.objects.filter(username__length=4)  # Filter trainers with username length 4
+
+    if request.method == 'POST':
+        # Updating the course details from POST data
+        course.name = request.POST.get('name')
+        course.description = request.POST.get('description')
+        course.duration = request.POST.get('duration')
+        course.trainer_id = request.POST.get('trainer')
+        course.status = bool(request.POST.get('status'))
+
+        # Save the updated course
+        course.save()
+        messages.success(request, f'Course "{course.name}" was updated successfully.')
+        return redirect('admin_app:course_list')  # Redirect to the course list page or another page
+
+    # Render the update course template
+    return render(request, 'courses/course_update.html', {'course': course, 'trainers': trainers})
