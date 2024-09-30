@@ -3,10 +3,11 @@ from django.contrib.auth import logout
 from django.db.models.functions import Length
 from django.urls import reverse
 from django.contrib.auth.models import User
-from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
-
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib import messages
+from .models import Course
 from .forms import UpdatePasswordForm, CourseForm
 
 
@@ -141,3 +142,34 @@ def create_course_view(request):
         form = CourseForm()
     return render(request, 'create_course.html', {'trainers': trainers, 'form': form})
 
+
+def delete_course_view(request, pk):  # Use 'pk' instead of 'course_id' for standard naming
+    course = get_object_or_404(Course, pk=pk)
+
+    if request.method == 'POST':
+        course.delete()
+        messages.success(request, f'The course "{course.name}" was deleted successfully.')
+        return redirect('course_list')  # Redirect to the course list view after deletion
+
+    return render(request, 'delete_course.html', {'course': course})
+
+
+
+def update_course_view(request, pk):
+    course = get_object_or_404(Course, pk=pk)
+    trainers = User.objects.filter(username__length=4)  # Get trainers with username length of 4
+
+    if request.method == 'POST':
+        # Update the course with POST data
+        course.name = request.POST.get('name')
+        course.description = request.POST.get('description')
+        course.duration = request.POST.get('duration')
+        course.trainer_id = request.POST.get('trainer')
+        course.status = bool(request.POST.get('status'))
+
+        # Save the updated course
+        course.save()
+        messages.success(request, f'The course "{course.name}" has been updated successfully.')
+        return redirect('course_list')  # Redirect to the course list page after updating
+
+    return render(request, 'update_course.html', {'course': course, 'trainers': trainers})
