@@ -86,6 +86,7 @@ def user_login(request):
     return render(request, 'admin_app/login.html')  # Render login page on GET request
 
 
+@login_required
 def log_out(request):
     # Use Django's built-in logout function
     logout(request)
@@ -108,6 +109,7 @@ def update_profile(request):
     return render(request, 'admin_app/profile.html', {'form': form})
 
 
+@login_required
 def update_password(request):
     if request.method == 'POST':
         form = UpdatePasswordForm(user=request.user, data=request.POST)
@@ -131,42 +133,23 @@ def profile_page(request):
     })
 
 
+@login_required
 def Course_Manage(request):
-    return render(request, 'courses/CourseManagement.html')
+    return render(request, 'courses/base.html')
 
+@login_required
 def create_course_view(request):
-    # Fetch only trainers whose username length is 4
-    trainers = User.objects.annotate(username_length=Length('username')).filter(username_length=4)
-
     if request.method == 'POST':
-        # Handle form submission
-        course_name = request.POST.get('name')
-        course_description = request.POST.get('description')
-        course_duration = request.POST.get('duration')
-        assigned_trainer_id = request.POST.get('trainer')
-        status = 'Active' if 'status' in request.POST else 'Inactive'
-
-        # Fetch the selected trainer object
-        assigned_trainer = get_object_or_404(User, id=assigned_trainer_id)
-
-        # Create and save the course
-        new_course = Course(
-            name=course_name,
-            description=course_description,
-            duration=course_duration,
-            trainer=assigned_trainer,
-            status=status
-        )
-        new_course.save()
-
-        return redirect('admin_app:course-list')  # Redirect to the course listing page
-
-    return render(request, 'admin_app/course_form.html', {
-        'trainers': trainers,
-    })
+        form = CourseForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('homepage')
+    else:
+        form = CourseForm()
+    return render(request, 'courses/course_create.html', {'form': form})
 
 
-
+@login_required
 def delete_course_view(request, pk):  # Use 'pk' instead of 'course_id' for standard naming
     course = get_object_or_404(Course, pk=pk)
 
@@ -179,6 +162,7 @@ def delete_course_view(request, pk):  # Use 'pk' instead of 'course_id' for stan
 
 
 
+@login_required
 def update_course_view(request, id):  # Use 'id' to match your URL pattern
     # Fetch the course object using the id
     course = get_object_or_404(Course, id=id)
@@ -198,4 +182,9 @@ def update_course_view(request, id):  # Use 'id' to match your URL pattern
         return redirect('admin_app:course_list')  # Redirect to the course list page or another page
 
     # Render the update course template
-    return render(request, 'courses/course_update.html', {'course': course, 'trainers': trainers})
+    return render(request, 'courses/course_edit.html', {'course': course, 'trainers': trainers})
+
+
+def course_list(request):
+    courses = Course.objects.all()  # Get all courses
+    return render(request, 'courses/course_list.html', {'courses': courses})
