@@ -15,15 +15,6 @@
     <!-- Include the navbar or sidebar -->
     {% include 'admin_app/navbar.html' %}
 
-    <!-- Sidebar Navigation -->
-    <div class="sidebar">
-        <a href="/admin/dashboard/">Dashboard</a>
-        <a href="/admin/courses/" class="active">Courses</a>
-        <a href="/admin/trainers/">Trainers</a>
-        <a href="/admin/employees/">Employees</a>
-        <a href="/admin/reports/">Reports</a>
-    </div>
-
     <!-- Main Content Area -->
     <div class="main-content">
         {% block content %}{% endblock %}

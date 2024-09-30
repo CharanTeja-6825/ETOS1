@@ -1,16 +1,16 @@
-{% extends 'admin_app/base.html' %}
+{% extends 'courses/base.html' %}
 
 {% block title %}Edit Course - TrainWise{% endblock %}
 
 {% block content %}
     <div class="d-flex justify-content-between align-items-center my-4">
         <h1>Edit Course</h1>
-        <a href="{% url 'admin_app:course-list' %}" class="btn btn-secondary">Back to Course List</a>
+        <a href="{% url 'admin_app:course_list' %}" class="btn btn-secondary">Back to Course List</a>
     </div>
 
     <div class="card">
         <div class="card-body">
-            <form method="post" action="{% url 'admin_app:course-update' course.id %}">
+            <form method="post" action="{% url 'admin_app:edit_course' course.id %}">
                 {% csrf_token %}
                 <div class="mb-3">
                     <label for="courseName" class="form-label">Course Name</label>
@@ -32,7 +32,7 @@
                     <select class="form-select" id="assignedTrainer" name="trainer" required>
                         {% for trainer in trainers %}
                         <option value="{{ trainer.id }}" {% if trainer.id == course.trainer.id %}selected{% endif %}>
-                            {{ trainer.username }}
+                            {{ trainer.first_name }} {{ trainer.last_name }}
                         </option>
                         {% endfor %}
                     </select>

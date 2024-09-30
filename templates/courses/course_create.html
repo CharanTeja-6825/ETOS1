@@ -14,30 +14,30 @@
                 {% csrf_token %}
                 <div class="mb-3">
                     <label for="courseName" class="form-label">Course Name</label>
-                    <input type="text" class="form-control" id="courseName" name="name" required>
+                    <input type="text" class="form-control" id="courseName" name="name" value="{{ form.name.value }}" required>
                 </div>
 
                 <div class="mb-3">
                     <label for="courseDescription" class="form-label">Course Description</label>
-                    <textarea class="form-control" id="courseDescription" name="description" rows="3" required></textarea>
+                    <textarea class="form-control" id="courseDescription" name="description" rows="3" required>{{ form.description.value }}</textarea>
                 </div>
 
                 <div class="mb-3">
                     <label for="courseDuration" class="form-label">Course Duration (hours)</label>
-                    <input type="number" class="form-control" id="courseDuration" name="duration" min="1" required>
+                    <input type="number" class="form-control" id="courseDuration" name="duration" min="1" value="{{ form.duration.value }}" required>
                 </div>
 
                 <div class="mb-3">
                     <label for="assignedTrainer" class="form-label">Assigned Trainer</label>
                     <select class="form-select" id="assignedTrainer" name="trainer" required>
-                        {% for trainer in trainers %}
-                        <option value="{{ trainer.id }}">{{ trainer.username }}</option>
+                        {% for trainer in form.fields.trainer.queryset %}
+                        <option value="{{ trainer.id }}">{{ trainer.first_name }} {{ trainer.last_name }} </option>
                         {% endfor %}
                     </select>
                 </div>
 
                 <div class="form-check form-switch mb-3">
-                    <input class="form-check-input" type="checkbox" id="courseStatus" name="status" checked>
+                    <input class="form-check-input" type="checkbox" id="courseStatus" name="status" {% if form.status.value %}checked{% endif %}>
                     <label class="form-check-label" for="courseStatus">Active</label>
                 </div>
 

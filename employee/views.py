@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from .forms import ProfileForm, UpdatePasswordForm
+from django.apps import apps
 
 def homepage_employee(request):
     return render(request, 'employee/employee_homepage.html')
@@ -44,4 +45,3 @@ def profile_page(request):
     return render(request, 'employee/employee_profile.html', {
         'user': request.user,
     })
-

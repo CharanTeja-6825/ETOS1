@@ -13,7 +13,7 @@ urlpatterns = [
     path('profile/update/', views.update_profile, name='update_profile'),
     path('profile/password/', views.update_password, name='update_password'),
     path('courses/', views.course_list, name='course_list'),
-    path('courses/edit/<int:id>/', views.update_course_view, name='edit_course'),
-    path('courses/delete/<int:id>/', views.delete_course_view, name='delete_course'),
+    path('courses/edit/<int:course_id>/', views.update_course_view, name='edit_course'),
+    path('courses/delete/<int:course_id>/', views.delete_course_view, name='delete_course'),
     path('courses/create/', views.create_course_view, name='create_course'),]
 

@@ -14,10 +14,3 @@ class Course(models.Model):
     def __str__(self):
         return self.name
 
-    def clean(self):
-        if self.trainer and len(self.trainer.username) != 4:
-            raise ValidationError({'trainer': 'Trainer username must be exactly 4 characters long.'})
-
-    def save(self, *args, **kwargs):
-        self.clean()  # Call clean method before saving
-        super().save(*args, **kwargs)

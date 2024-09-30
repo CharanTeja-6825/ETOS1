@@ -31,17 +31,17 @@ def register(request):
         # Validate passwords
         if password != confirm_password:
             messages.error(request, 'Passwords do not match.')
-            return redirect('register')  # Replace 'register' with your registration page URL name
+            return redirect('admin_app:register')  # Replace 'register' with your registration page URL name
 
         # Check if the username already exists
         if User.objects.filter(username=username).exists():
             messages.error(request, 'Username already taken.')
-            return redirect('register')
+            return redirect('admin_app:register')
 
         # Check if the email already exists
         if User.objects.filter(email=email).exists():
             messages.error(request, 'Email already registered.')
-            return redirect('register')
+            return redirect('admin_app:register')
 
         # Create a new user
         user = User.objects.create_user(username=username, email=email, password=password)
@@ -50,7 +50,7 @@ def register(request):
         user.save()
 
         messages.success(request, 'Registration successful. You can now log in.')
-        return redirect('user_login')  # Replace 'user_login' with your login page URL name
+        return redirect('admin_app:user_login')  # Replace 'user_login' with your login page URL name
 
     return render(request, 'admin_app/register.html')  # Replace 'admin_app/register.html' with your template path
 
@@ -76,7 +76,7 @@ def user_login(request):
                 return redirect('admin_app:homepage')
             else:
                 messages.error(request, 'Username length does not match any role-specific redirects.')
-                return redirect('user_login')  # Redirect back to login if length does not match any criteria
+                return redirect('admin_app:user_login')  # Redirect back to login if length does not match any criteria
 
         else:
             # If authentication fails, show an error message
@@ -143,30 +143,34 @@ def create_course_view(request):
         form = CourseForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('homepage')
+            return redirect('admin_app:homepage')
     else:
         form = CourseForm()
+        # Filter trainers with a username of exactly 4 characters
+        form.fields['trainer'].queryset = User.objects.filter(username__regex=r'^\w{4}$')
+
     return render(request, 'courses/course_create.html', {'form': form})
 
 
+
 @login_required
-def delete_course_view(request, pk):  # Use 'pk' instead of 'course_id' for standard naming
-    course = get_object_or_404(Course, pk=pk)
+def delete_course_view(request, course_id):  # Use 'pk' instead of 'course_id' for standard naming
+    course = get_object_or_404(Course, id=course_id)
 
     if request.method == 'POST':
         course.delete()
         messages.success(request, f'The course "{course.name}" was deleted successfully.')
-        return redirect('course_list')  # Redirect to the course list view after deletion
+        return redirect('admin_app:course_list')  # Redirect to the course list view after deletion
 
     return render(request, 'courses/course_delete.html', {'course': course})
 
 
 
 @login_required
-def update_course_view(request, id):  # Use 'id' to match your URL pattern
+def update_course_view(request, course_id):  # Use 'id' to match your URL pattern
     # Fetch the course object using the id
-    course = get_object_or_404(Course, id=id)
-    trainers = User.objects.filter(username__length=4)  # Filter trainers with username length 4
+    course = get_object_or_404(Course, id=course_id)
+    trainers = User.objects.filter(username__regex=r'^\w{4}$')  # Filter trainers with username length 4
 
     if request.method == 'POST':
         # Updating the course details from POST data
