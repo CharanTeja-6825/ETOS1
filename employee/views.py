@@ -46,5 +46,14 @@ def profile_page(request):
         'user': request.user,
     })
 
+@login_required
+def course_list(request):
+    Course = apps.get_model('admin_app', 'Course')
+    courses = Course.objects.all()
+    return render(request, 'employee/employee_navbar.html', {'courses': courses})
+
+
+
+
 
 

@@ -189,6 +189,7 @@ def update_course_view(request, course_id):  # Use 'id' to match your URL patter
     return render(request, 'courses/course_edit.html', {'course': course, 'trainers': trainers})
 
 
+@login_required
 def course_list(request):
     courses = Course.objects.all()  # Get all courses
     return render(request, 'courses/course_list.html', {'courses': courses})
