@@ -14,6 +14,26 @@
             margin-left: 10px;
         }
     </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if the user is authenticated by using a Django context variable
+            var isAuthenticated = "{{ user.is_authenticated }}";
+
+            // Select all navbar links except ETOS
+            var restrictedLinks = document.querySelectorAll('.navbar-nav .nav-link:not([href*="homepage"])');
+
+            // Attach click event listeners to restricted links
+            restrictedLinks.forEach(function(link) {
+                link.addEventListener('click', function(event) {
+                    if (isAuthenticated === 'False') {
+                        // Prevent the default action and redirect to login page if the user is not authenticated
+                        event.preventDefault();
+                        window.location.href = "{% url 'admin_app:user_login' %}";
+                    }
+                });
+            });
+        });
+    </script>
 </head>
 <body>
   <!-- Admin Navbar -->
@@ -37,7 +57,6 @@
           <li class="nav-item">
             <a class="nav-link" href="#">View Reports</a>
           </li>
-
         </ul>
         <div class="d-flex align-items-center">
           <a class="nav-link text-white" href="{% url 'admin_app:profile_page' %}">{{user.first_name}} {{user.last_name}}</a>
