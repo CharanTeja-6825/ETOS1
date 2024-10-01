@@ -1,5 +1,5 @@
 # Default ignored files
 /shelf/
 /workspace.xml
-/db.sqlite3
+db.sqlite3
 # Ignore SQLite database file
