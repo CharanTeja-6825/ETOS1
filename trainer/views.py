@@ -1,5 +1,7 @@
 from django.shortcuts import render
-
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from .models import Trainer
 
 def homepage_trainer(request):
     return render(request, 'trainer/trainer_homepage.html')
@@ -67,3 +69,15 @@ from django.contrib.auth.decorators import login_required
 #         'reports': reports,
 #         'form': form
 #    })
+@login_required
+def my_courses(request):
+    try:
+        trainer = Trainer.objects.get(user=request.user)
+        courses = trainer.assigned_courses.all()  # Get the assigned courses
+    except Trainer.DoesNotExist:
+        # Handle the case where no Trainer object exists for the user
+        courses = None  # Or any other fallback action, such as returning an empty course list
+
+    return render(request, 'trainer/assigned_courses.html', {'courses': courses})
+
+
