@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
 from .forms import ProfileForm, UpdatePasswordForm
 from django.apps import apps
@@ -50,10 +50,11 @@ def profile_page(request):
 def course_list(request):
     Course = apps.get_model('admin_app', 'Course')
     courses = Course.objects.all()
-    return render(request, 'employee/employee_navbar.html', {'courses': courses})
+    print(courses)  # Add this line to see what courses are retrieved
+    return render(request, 'employee/assigned_courses.html', {'courses': courses})
 
-
-
-
-
-
+@login_required
+def course_detail(request, course_id):  # Ensure this accepts course_id
+    Course = apps.get_model('admin_app', 'Course')
+    course = get_object_or_404(Course, id=course_id)  # Fetch the specific course by ID
+    return render(request, 'employee/course_details.html', {'course': course})

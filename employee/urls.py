@@ -9,5 +9,5 @@ urlpatterns = [
   path('profile/password/', views.update_password, name='update_password'),
   path('profile/', views.profile_page, name='profile_page'),
   path('courses/', views.course_list, name='course_list'),
-  #path('course/<int:id>/', views.course_detail, name='course_detail'),
+  path('course/<int:course_id>/', views.course_detail, name='course_detail'),
 ]
