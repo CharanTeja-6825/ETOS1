@@ -45,3 +45,6 @@ def profile_page(request):
     return render(request, 'employee/employee_profile.html', {
         'user': request.user,
     })
+
+
+
