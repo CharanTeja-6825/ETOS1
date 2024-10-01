@@ -34,10 +34,10 @@
         </li>
       </ul>
       <div class="d-flex">
+          <span class="navbar-text me-3">{{ user.username }}!</span>
         {% if user.is_authenticated %}
-          <span class="navbar-text me-3">Welcome, {{ user.username }}!</span>
-          <a class="btn btn-danger btn-custom" href="{% url 'admin_app:user_login' %}">Logout</a>
-        {% else %}
+            <a class="btn btn-danger btn-custom" href="{% url 'admin_app:log_out' %}">Logout</a>
+          {% else %}
           <a class="btn btn-primary btn-custom" href="{% url 'admin_app:user_login' %}">Login</a>
           <a class="btn btn-secondary btn-custom" href="#">Register</a>
         {% endif %}
