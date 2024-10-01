@@ -1,6 +1,4 @@
 from django.db import models
-from django.contrib.auth.models import User
-
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
 
@@ -16,7 +14,7 @@ class Course(models.Model):
 
 
 # models.py in your Django app
-from django.db import models
+
 
 class TestModel(models.Model):
     name = models.CharField(max_length=100)
