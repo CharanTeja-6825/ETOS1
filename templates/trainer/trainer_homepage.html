@@ -17,7 +17,7 @@
         }
         .hero-section {
             background-color: ;
-            color: white;
+            color: black;
             padding: 60px 0;
             text-align: center;
         }
@@ -72,7 +72,7 @@
   <section class="hero-section">
     <div class="container">
       {% if user.is_authenticated %}
-        <h1>Welcome, {{ user.first_name }}!</h1>
+        <h1>Welcome, {{ user.get_full_name }}!</h1>
       {% else %}
         <h1>Welcome To TrainWise!</h1>
       {% endif %}

@@ -34,7 +34,7 @@
         </li>
       </ul>
       <div class="d-flex">
-          <span class="navbar-text me-3">{{ user.username }}!</span>
+          <span class="navbar-text me-3">{{ user.get_full_name }}!</span>
         {% if user.is_authenticated %}
             <a class="btn btn-danger btn-custom" href="{% url 'admin_app:log_out' %}">Logout</a>
           {% else %}
