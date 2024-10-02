@@ -5,6 +5,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
 from .forms import ProfileForm, UpdatePasswordForm
 from django.apps import apps
+from .models import EmployeeCourse
 
 def homepage_employee(request):
     return render(request, 'employee/employee_homepage.html')
@@ -58,3 +59,24 @@ def course_detail(request, course_id):  # Ensure this accepts course_id
     Course = apps.get_model('admin_app', 'Course')
     course = get_object_or_404(Course, id=course_id)  # Fetch the specific course by ID
     return render(request, 'employee/course_details.html', {'course': course})
+
+
+@login_required
+def add_course_to_employee(request):
+    Course = apps.get_model('admin_app', 'Course')
+    courses = Course.objects.all()  # Fetch all available courses
+
+    if request.method == 'POST':
+        course_id = request.POST.get('course')
+        employee = request.user  # Assuming employee is the logged-in user
+
+        # Fetch the selected course
+        course = get_object_or_404(Course, id=course_id)
+
+        # Create or add the course to the EmployeeCourse model
+        EmployeeCourse.objects.create(employee=employee, course=course)
+
+        # Redirect to some success or management page
+        return redirect('employee_courses')  # Replace with your desired redirect URL
+
+    return render(request, 'employee/add_course.html', {'courses': courses})
