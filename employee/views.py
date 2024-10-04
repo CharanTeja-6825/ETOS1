@@ -77,6 +77,6 @@ def add_course_to_employee(request):
         EmployeeCourse.objects.create(employee=employee, course=course)
 
         # Redirect to some success or management page
-        return redirect('employee_courses')  # Replace with your desired redirect URL
+        return redirect('employee:homepage_employee')  # Replace with your desired redirect URL
 
     return render(request, 'employee/add_course.html', {'courses': courses})

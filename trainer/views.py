@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.apps import apps
+from django.shortcuts import render
 
 
 def homepage_trainer(request):
@@ -22,3 +23,21 @@ def course_detail(request, course_id):
 
     # Render the course detail template with the course context
     return render(request, 'trainer/course_info.html', {'course': course})
+
+
+def trainer_assigned_employees(request):
+    # Dynamically load the Course and Employee models from another app
+    Course = apps.get_model('admin_app', 'Course')
+    Employee = apps.get_model('employee', 'EmployeeCourse')
+
+    # Filter courses for the logged-in trainer
+    trainer = request.user  # Assuming the logged-in user is the trainer
+    courses = Course.objects.filter(trainer=trainer).select_related('employee')
+
+    # Create a list of assigned employees
+    employees = [course.employee for course in courses]
+
+    context = {
+        'employees': employees
+    }
+    return render(request, 'trainer/assigned_employees.html', context)
