@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ETOS - {% block title %} {% endblock %}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        body {
+            background-color: #c9d6ff;
+            background: linear-gradient(to right, #e2e2e2, #c9d6ff);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            text-align: center;
+        }
+
+        /* Navbar Styles */
+        .navbar {
+            width: 100%;
+            position: absolute;
+            top: 0;
+            padding: 20px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: transparent;
+            z-index: 1000;
+        }
+
+        .navbar .brand {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .navbar .links a {
+            margin: 0 15px;
+            text-decoration: none;
+            color: #333;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .navbar .links a:hover {
+            color: #512da8;
+        }
+
+        .navbar .login-btn {
+            padding: 10px 20px;
+            background-color: #512da8;
+            color: white;
+            border-radius: 20px;
+            border: none;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .navbar .login-btn:hover {
+            background-color: #5c6bc0;
+            transform: translateY(-3px);
+        }
+
+        /* Hero Section */
+        .hero {
+            color: #333;
+            padding: 60px 0;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            padding: 15px 40px;
+            background-color: #512da8;
+            color: white;
+            border-radius: 30px;
+            border: none;
+            font-size: 1rem;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            margin: 10px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            background-color: #5c6bc0;
+            transform: translateY(-3px);
+        }
+
+        /* Table Styles */
+        table {
+            width: 80%;
+            margin: 40px auto;
+            border-collapse: collapse;
+            background-color: #f4f4f4;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        table th, table td {
+            padding: 15px;
+            text-align: center;
+        }
+
+        table th {
+            background-color: #512da8;
+            color: #fff;
+        }
+
+        table tr:nth-child(even) {
+            background-color: #e2e2e2;
+        }
+
+        table tr:hover {
+            background-color: #ddd;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .navbar .brand {
+                font-size: 1.5rem;
+            }
+
+            .navbar .links a {
+                font-size: 0.9rem;
+            }
+
+            .btn {
+                padding: 10px 30px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="brand">ETOS</div>
+        <div class="links">
+            <a href="{% url 'homepage' %}">Home</a>
+            <a href="{% url 'course_list' %}">Courses</a>
+        </div>
+        <form action="{% url 'login' %}" method="get">
+            <button type="submit" class="login-btn">Login</button>
+        </form>
+    </nav>
+
+    <!-- Course Form Section -->
+    <section class="hero">
+        <h1>{% block title %}Create/Edit Course{% endblock %}</h1>
+        <form method="post">
+            {% csrf_token %}
+            <div style="max-width: 600px; margin: 0 auto;">
+                {{ form.as_p }}
+                <button type="submit" class="btn">Save Course</button>
+            </div>
+        </form>
+    </section>
+
+    <!-- Delete Confirmation Section -->
+    <section class="hero">
+        <h1>Delete Course</h1>
+        <p>Are you sure you want to delete the course <strong>{{ course.name }}</strong>?</p>
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn" style="background-color: #e53935;">Confirm Delete</button>
+            <a href="{% url 'course_list' %}" class="btn">Cancel</a>
+        </form>
+    </section>
+
+</body>
+</html>
